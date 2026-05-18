@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Night Oracle Pro</title>
+<title>Night Oracle</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -20,8 +20,8 @@
 
 body{
     background:#050816;
-    overflow-x:hidden;
     color:white;
+    overflow-x:hidden;
 }
 
 /* BACKGROUND */
@@ -30,7 +30,7 @@ body{
     position:fixed;
     width:100%;
     height:100%;
-    z-index:-3;
+    z-index:-5;
 }
 
 .star{
@@ -55,7 +55,7 @@ body{
     height:500px;
     border-radius:50%;
     filter:blur(120px);
-    z-index:-2;
+    z-index:-4;
 }
 
 .glow1{
@@ -65,7 +65,7 @@ body{
 }
 
 .glow2{
-    background:#2f8df740;
+    background:#3d8bff30;
     bottom:-150px;
     right:-100px;
 }
@@ -77,20 +77,20 @@ body{
     width:100%;
     height:100vh;
     background:#050816;
-    z-index:999;
     display:flex;
-    flex-direction:column;
     justify-content:center;
     align-items:center;
+    flex-direction:column;
+    z-index:999;
     transition:1s;
 }
 
-.magic{
-    width:140px;
-    height:140px;
+.magic-circle{
+    width:150px;
+    height:150px;
     border-radius:50%;
     border:4px solid #ffffff10;
-    border-top:4px solid #b68cff;
+    border-top:4px solid #c89fff;
     animation:spin 2s linear infinite;
     box-shadow:0 0 40px #7b2ff7;
 }
@@ -109,23 +109,22 @@ body{
 /* MAIN */
 
 .container{
-    max-width:1300px;
+    max-width:1500px;
     margin:auto;
     padding:50px 20px;
 }
 
 .hero{
     text-align:center;
-    margin-bottom:60px;
 }
 
 .logo{
-    font-size:80px;
+    font-size:85px;
 }
 
 h1{
-    font-size:65px;
-    background:linear-gradient(to right,#fff,#b88fff);
+    font-size:70px;
+    background:linear-gradient(to right,#fff,#d6b1ff);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
@@ -139,19 +138,16 @@ h1{
 /* GLASS */
 
 .glass{
+    margin-top:40px;
     background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.08);
     backdrop-filter:blur(20px);
-    border-radius:30px;
+    border-radius:35px;
+    padding:35px;
     box-shadow:0 0 40px rgba(123,47,247,.15);
 }
 
-/* FORM */
-
-.form-box{
-    padding:35px;
-    margin-bottom:40px;
-}
+/* INPUT */
 
 input{
     width:100%;
@@ -161,54 +157,40 @@ input{
     border-radius:18px;
     background:#10192f;
     color:white;
-    margin-top:10px;
+    margin-top:15px;
     border:1px solid transparent;
     transition:.3s;
 }
 
 input:focus{
-    border:1px solid #b68cff;
+    border:1px solid #c89fff;
     box-shadow:0 0 20px rgba(123,47,247,.4);
-}
-
-button{
-    margin-top:25px;
-    width:100%;
-    border:none;
-    padding:18px;
-    border-radius:18px;
-    background:linear-gradient(45deg,#7b2ff7,#c08fff);
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    transition:.3s;
-    box-shadow:0 0 25px rgba(123,47,247,.5);
-}
-
-button:hover{
-    transform:translateY(-3px);
 }
 
 /* CARDS */
 
-.cards-container{
-    display:flex;
-    justify-content:center;
+.cards{
+    margin-top:50px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
     gap:25px;
-    flex-wrap:wrap;
-    margin-top:40px;
 }
 
-.tarot-card{
-    width:180px;
+.card{
     height:300px;
-    position:relative;
-    transform-style:preserve-3d;
-    transition:1s;
+    perspective:1000px;
     cursor:pointer;
 }
 
-.tarot-card.flip{
+.card-inner{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:1s;
+}
+
+.card.flipped .card-inner{
     transform:rotateY(180deg);
 }
 
@@ -221,21 +203,21 @@ button:hover{
 }
 
 .front{
-    background:linear-gradient(135deg,#111a34,#7b2ff7);
+    background:linear-gradient(135deg,#131d39,#7b2ff7);
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:60px;
     overflow:hidden;
-    box-shadow:0 0 35px rgba(123,47,247,.5);
+    box-shadow:0 0 40px rgba(123,47,247,.5);
 }
 
 .front::before{
     content:'';
     position:absolute;
-    width:300px;
-    height:300px;
-    background:rgba(255,255,255,.1);
+    width:250px;
+    height:250px;
+    background:rgba(255,255,255,.08);
     transform:rotate(45deg);
     animation:shine 5s infinite;
 }
@@ -266,18 +248,22 @@ button:hover{
 }
 
 .back p{
-    margin-top:15px;
+    margin-top:12px;
     opacity:.8;
     line-height:1.7;
     font-size:14px;
 }
 
-/* FINAL RESULT */
+.selected{
+    outline:4px solid #d6b1ff;
+    transform:scale(1.04);
+}
 
-.final-box{
-    margin-top:50px;
-    padding:35px;
+/* RESULT */
+
+.result{
     display:none;
+    margin-top:50px;
     animation:fade 1s;
 }
 
@@ -292,28 +278,20 @@ button:hover{
     }
 }
 
-.final-box h2{
+.result-box{
+    background:#10192f;
+    border-radius:30px;
+    padding:35px;
+}
+
+.result-box h2{
     margin-bottom:20px;
 }
 
-.energy{
-    margin-top:25px;
-}
-
-.bar{
-    width:100%;
-    height:14px;
-    background:#1d2645;
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:8px;
-    margin-bottom:18px;
-}
-
-.fill{
-    height:100%;
-    border-radius:20px;
-    background:linear-gradient(90deg,#7b2ff7,#d6afff);
+.result-box p{
+    line-height:2;
+    opacity:.85;
+    white-space:pre-line;
 }
 
 /* HISTORY */
@@ -336,14 +314,15 @@ button:hover{
     margin-bottom:10px;
 }
 
+/* MOBILE */
+
 @media(max-width:768px){
 
     h1{
         font-size:45px;
     }
 
-    .tarot-card{
-        width:140px;
+    .card{
         height:240px;
     }
 
@@ -355,8 +334,13 @@ button:hover{
 <body>
 
 <div class="loading" id="loading">
-    <div class="magic"></div>
-    <p>กำลังอ่านเส้นทางโชคชะตา...</p>
+
+    <div class="magic-circle"></div>
+
+    <p>
+        กำลังเชื่อมต่อกับเส้นทางโชคชะตา...
+    </p>
+
 </div>
 
 <div class="stars" id="stars"></div>
@@ -373,58 +357,43 @@ button:hover{
         <h1>Night Oracle</h1>
 
         <div class="subtitle">
-            เปิดไพ่ 3 ใบ • อดีต ปัจจุบัน อนาคต <br>
-            AI จะรวมคำทำนายให้แบบสมจริง
+            เลือกไพ่ 3 ใบจาก 10 ใบ <br>
+            ไพ่จะวิเคราะห์แบบ Past • Present • Future จริง
         </div>
 
     </div>
 
-    <div class="glass form-box">
+    <div class="glass">
 
         <label>ชื่อของคุณ</label>
 
         <input type="text" id="name" placeholder="เช่น เติ้ช">
 
-        <button onclick="startReading()">
-            เริ่มเปิดไพ่
-        </button>
+        <div class="cards" id="cards"></div>
 
-    </div>
+        <div class="result" id="result">
 
-    <div class="cards-container" id="cards"></div>
+            <div class="result-box">
 
-    <div class="glass final-box" id="finalBox">
+                <h2>
+                    ✨ คำทำนายจากไพ่
+                </h2>
 
-        <h2>✨ คำทำนายรวม</h2>
+                <p id="finalText"></p>
 
-        <p id="finalText"></p>
-
-        <div class="energy">
-
-            Aura Energy
-            <div class="bar">
-                <div class="fill" id="aura"></div>
-            </div>
-
-            Love Luck
-            <div class="bar">
-                <div class="fill" id="love"></div>
-            </div>
-
-            Fortune
-            <div class="bar">
-                <div class="fill" id="fortune"></div>
             </div>
 
         </div>
 
-    </div>
+        <div class="history">
 
-    <div class="history">
+            <h2>
+                📜 ประวัติคำทำนาย
+            </h2>
 
-        <h2>📜 ประวัติคำทำนาย</h2>
+            <div id="history"></div>
 
-        <div id="history"></div>
+        </div>
 
     </div>
 
@@ -439,7 +408,7 @@ window.onload = ()=>{
     setTimeout(()=>{
         loading.style.opacity = "0"
         loading.style.pointerEvents = "none"
-    },2200)
+    },2000)
 
     loadHistory()
 
@@ -449,16 +418,17 @@ window.onload = ()=>{
 
 for(let i=0;i<250;i++){
 
-    let star = document.createElement("div")
-    star.classList.add("star")
+    let s = document.createElement("div")
 
-    star.style.left = Math.random()*100+"%"
-    star.style.top = Math.random()*100+"%"
+    s.classList.add("star")
 
-    star.style.animationDuration =
+    s.style.left = Math.random()*100+"%"
+    s.style.top = Math.random()*100+"%"
+
+    s.style.animationDuration =
         (Math.random()*5+2)+"s"
 
-    stars.appendChild(star)
+    stars.appendChild(s)
 
 }
 
@@ -469,44 +439,164 @@ const tarot = [
 {
 icon:"🌙",
 name:"The Moon",
-meaning:"มีความลับหรือความรู้สึกบางอย่างที่ยังไม่เปิดเผย"
+past:"อดีตเต็มไปด้วยความไม่ชัดเจน หรือความสัมพันธ์ที่ยังค้างคาใจ",
+present:"ตอนนี้คุณกำลังคิดมากและสับสนกับบางเรื่อง",
+future:"อนาคตจะเริ่มชัดขึ้นเมื่อคุณยอมรับความจริงบางอย่าง"
 },
 
 {
 icon:"☀️",
 name:"The Sun",
-meaning:"ช่วงเวลาแห่งโชค ความสำเร็จ และพลังงานดีๆ"
+past:"อดีตเคยมีช่วงเวลาที่สดใสและมีความสุข",
+present:"ตอนนี้ดวงกำลังเปิด มีโอกาสใหม่เข้ามา",
+future:"อนาคตมีแนวโน้มประสบความสำเร็จสูง"
 },
 
 {
 icon:"🗡️",
 name:"The Sword",
-meaning:"ต้องตัดสินใจเรื่องสำคัญ และระวังคำพูด"
+past:"คุณเคยผ่านการตัดสินใจที่ยากลำบาก",
+present:"ตอนนี้มีเรื่องที่ต้องเลือกหรือเผชิญหน้า",
+future:"หากกล้าตัดสินใจ ชีวิตจะเปลี่ยนไปมาก"
 },
 
 {
 icon:"💜",
 name:"The Heart",
-meaning:"ดวงความรักเด่น มีคนกำลังคิดถึงคุณ"
+past:"เรื่องความรักหรือความสัมพันธ์ส่งผลต่อชีวิตคุณมาก",
+present:"ตอนนี้มีคนกำลังคิดถึงหรือจับตามองคุณ",
+future:"อนาคตมีโอกาสเกิดความสัมพันธ์สำคัญ"
 },
 
 {
 icon:"🔥",
 name:"The Flame",
-meaning:"พลังชีวิตกำลังเปลี่ยนแปลงครั้งใหญ่"
+past:"อดีตมีการเปลี่ยนแปลงครั้งใหญ่",
+present:"ตอนนี้พลังงานชีวิตแรงมาก",
+future:"อนาคตกำลังเข้าสู่ช่วงเปลี่ยนชีวิต"
 },
 
 {
 icon:"👁️",
 name:"The Eye",
-meaning:"สัญชาตญาณของคุณกำลังแม่นยำมาก"
+past:"คุณเคยมองข้ามสัญชาตญาณตัวเอง",
+present:"ตอนนี้เซนส์ของคุณแม่นมาก",
+future:"จะเริ่มเห็นความจริงของบางคน"
+},
+
+{
+icon:"🌊",
+name:"The Ocean",
+past:"คุณเคยจมอยู่กับอารมณ์ตัวเอง",
+present:"ตอนนี้ยังมีความลังเลในใจ",
+future:"อนาคตจะสงบขึ้นเมื่อปล่อยวาง"
+},
+
+{
+icon:"⚡",
+name:"The Thunder",
+past:"อดีตมีเหตุการณ์ไม่คาดคิดเกิดขึ้น",
+present:"ตอนนี้มีพลังแห่งการเปลี่ยนแปลง",
+future:"เร็วๆนี้จะมีเรื่องที่เปลี่ยนชีวิตคุณ"
+},
+
+{
+icon:"🌹",
+name:"The Rose",
+past:"คุณเคยได้รับความรักที่ลึกซึ้ง",
+present:"ตอนนี้เสน่ห์ของคุณโดดเด่นมาก",
+future:"อนาคตมีคนเข้ามาทำให้หัวใจเปลี่ยน"
+},
+
+{
+icon:"🕯️",
+name:"The Candle",
+past:"คุณเคยผ่านช่วงเวลามืดมน",
+present:"ตอนนี้เริ่มมองเห็นความหวัง",
+future:"อนาคตจะเริ่มดีขึ้นอย่างช้าๆ"
 }
 
 ]
 
-/* START */
+/* CREATE CARDS */
 
-function startReading(){
+const cardsBox =
+    document.getElementById("cards")
+
+const selected = []
+
+tarot.forEach((card,index)=>{
+
+cardsBox.innerHTML += `
+
+<div class="card" onclick="selectCard(this,${index})">
+
+    <div class="card-inner">
+
+        <div class="front">
+            ✨
+        </div>
+
+        <div class="back">
+
+            <div style="font-size:55px;">
+                ${card.icon}
+            </div>
+
+            <h2>${card.name}</h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+`
+
+})
+
+/* SELECT */
+
+function selectCard(el,index){
+
+    if(selected.length >= 3 &&
+       !el.classList.contains("selected")){
+        return
+    }
+
+    el.classList.toggle("flipped")
+    el.classList.toggle("selected")
+
+    const exists =
+        selected.includes(index)
+
+    if(exists){
+
+        selected.splice(
+            selected.indexOf(index),1
+        )
+
+    }else{
+
+        selected.push(index)
+
+    }
+
+    if(selected.length === 3){
+
+        generateReading()
+
+    }else{
+
+        result.style.display = "none"
+
+    }
+
+}
+
+/* GENERATE */
+
+function generateReading(){
 
     const name =
         document.getElementById("name").value
@@ -516,128 +606,137 @@ function startReading(){
         return
     }
 
-    const cards =
-        document.getElementById("cards")
+    const past =
+        tarot[selected[0]]
 
-    cards.innerHTML = ""
+    const present =
+        tarot[selected[1]]
 
-    const selected = []
+    const future =
+        tarot[selected[2]]
 
-    for(let i=0;i<3;i++){
+    let combination = ""
 
-        const random =
-            tarot[Math.floor(Math.random()*tarot.length)]
+    /* COMBO ANALYSIS */
 
-        selected.push(random)
+    if(
+        past.name === "The Moon" &&
+        future.name === "The Sun"
+    ){
 
-        cards.innerHTML += `
-
-        <div class="tarot-card" id="card${i}">
-        
-            <div class="front">
-                ✨
-            </div>
-
-            <div class="back">
-                <div style="font-size:50px;">
-                    ${random.icon}
-                </div>
-
-                <h2>${random.name}</h2>
-
-                <p>${random.meaning}</p>
-            </div>
-
-        </div>
-
-        `
+        combination =
+        "ไพ่ชุดนี้หมายถึงการเดินออกจากช่วงเวลาที่สับสน ไปสู่ช่วงชีวิตที่ชัดเจนและสดใสกว่าเดิม"
 
     }
 
-    /* FLIP ANIMATION */
+    else if(
+        present.name === "The Thunder" &&
+        future.name === "The Flame"
+    ){
 
-    setTimeout(()=>{
-        document.getElementById("card0").classList.add("flip")
-    },700)
+        combination =
+        "มีแนวโน้มเกิดการเปลี่ยนแปลงครั้งใหญ่แบบรวดเร็ว อาจเป็นเรื่องงาน ความสัมพันธ์ หรือเป้าหมายชีวิต"
 
-    setTimeout(()=>{
-        document.getElementById("card1").classList.add("flip")
-    },1500)
+    }
 
-    setTimeout(()=>{
-        document.getElementById("card2").classList.add("flip")
-    },2300)
+    else if(
+        past.name === "The Heart" &&
+        future.name === "The Rose"
+    ){
 
-    /* FINAL RESULT */
+        combination =
+        "ไพ่ชุดนี้เด่นเรื่องความรักมาก คนเก่าหรือความสัมพันธ์เก่าอาจกลับเข้ามาอีกครั้ง"
 
-    setTimeout(()=>{
+    }
 
-        const combined =
-        `${name}... ไพ่ทั้งสามใบกำลังบอกว่าชีวิตของคุณกำลังเข้าสู่ช่วงเปลี่ยนแปลงสำคัญ 
-        ช่วงนี้พลังงานรอบตัวแรงมาก มีทั้งโอกาสใหม่และบางสิ่งที่ต้องตัดสินใจ 
-        โดยเฉพาะเรื่องความสัมพันธ์และอนาคต จะมีบางอย่างเข้ามาแบบไม่คาดคิด 
-        แต่สุดท้ายเส้นทางของคุณกำลังมุ่งไปในทางที่ดีขึ้น`
+    else if(
+        present.name === "The Ocean" &&
+        future.name === "The Candle"
+    ){
 
-        document.getElementById("finalText").innerHTML =
-            combined
+        combination =
+        "แม้ตอนนี้จะยังสับสน แต่สุดท้ายคุณจะค่อยๆเจอทางออกและเริ่มกลับมาสบายใจ"
 
-        document.getElementById("finalBox").style.display =
-            "block"
+    }
 
-        document.getElementById("aura").style.width =
-            Math.floor(Math.random()*30+70)+"%"
+    else{
 
-        document.getElementById("love").style.width =
-            Math.floor(Math.random()*40+50)+"%"
+        combination =
+        "ไพ่ทั้งสามใบสะท้อนว่าชีวิตของคุณกำลังเข้าสู่ช่วงเปลี่ยนผ่านสำคัญ มีทั้งบททดสอบและโอกาสใหม่รออยู่"
 
-        document.getElementById("fortune").style.width =
-            Math.floor(Math.random()*30+70)+"%"
+    }
 
-        /* SAVE LOCAL */
+    const text = `
 
-        const history =
-            JSON.parse(localStorage.getItem("tarotHistory")) || []
+🔮 ไพ่ใบแรก : ${past.name}
+${past.past}
 
-        history.unshift({
-            date:new Date().toLocaleString("th-TH"),
-            text:combined,
-            cards:selected.map(c=>c.name).join(", ")
-        })
+✨ ไพ่ใบที่สอง : ${present.name}
+${present.present}
 
-        localStorage.setItem(
-            "tarotHistory",
-            JSON.stringify(history)
-        )
+🌠 ไพ่ใบที่สาม : ${future.name}
+${future.future}
 
-        loadHistory()
+📜 บทสรุปจากไพ่
+${combination}
 
-    },3200)
+`
+
+    document.getElementById("finalText")
+        .innerHTML = text
+
+    result.style.display = "block"
+
+    /* SAVE */
+
+    const history =
+        JSON.parse(localStorage.getItem("nightOracleHistory")) || []
+
+    history.unshift({
+
+        date:new Date().toLocaleString("th-TH"),
+
+        text:text,
+
+        cards:
+            `${past.name}, ${present.name}, ${future.name}`
+
+    })
+
+    localStorage.setItem(
+        "nightOracleHistory",
+        JSON.stringify(history)
+    )
+
+    loadHistory()
 
 }
 
-/* LOAD HISTORY */
+/* HISTORY */
 
 function loadHistory(){
 
     const history =
-        JSON.parse(localStorage.getItem("tarotHistory")) || []
+        JSON.parse(localStorage.getItem("nightOracleHistory")) || []
 
-    const box =
+    const historyBox =
         document.getElementById("history")
 
-    box.innerHTML = ""
+    historyBox.innerHTML = ""
 
     if(history.length === 0){
 
-        box.innerHTML =
-            `<div style="opacity:.5;margin-top:15px;">ยังไม่มีประวัติ</div>`
+        historyBox.innerHTML =
+        `<div style="opacity:.5;margin-top:15px;">
+            ยังไม่มีประวัติ
+        </div>`
 
         return
     }
 
     history.slice(0,10).forEach(item=>{
 
-        box.innerHTML += `
+        historyBox.innerHTML += `
 
         <div class="history-item">
 
@@ -649,7 +748,7 @@ function loadHistory(){
                 🔮 ${item.cards}
             </h3>
 
-            <p style="margin-top:10px;opacity:.8;line-height:1.7;">
+            <p style="margin-top:10px;line-height:1.8;opacity:.8;">
                 ${item.text}
             </p>
 
