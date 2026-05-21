@@ -3,13 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Night Oracle</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+:root{
+    --bg:#040714;
+    --panel:#0b1124;
+    --panel-2:#101936;
+    --line:rgba(255,255,255,.12);
+    --text:#fff;
+    --muted:rgba(255,255,255,.68);
+    --violet:#c79cff;
+    --pink:#ff8bd3;
+    --gold:#ffd98a;
+    --blue:#78d8ff;
+    --green:#9dffc2;
+}
 
 *{
     margin:0;
@@ -18,19 +31,49 @@
     font-family:'Prompt',sans-serif;
 }
 
+html{
+    scroll-behavior:smooth;
+}
+
 body{
-    background:#050816;
-    color:white;
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--text);
     overflow-x:hidden;
 }
 
-/* BACKGROUND */
+button,
+input,
+textarea{
+    font:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.sky,
+.stars,
+.aurora,
+.constellation,
+.particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+
+.sky{
+    z-index:-8;
+    background:
+        radial-gradient(circle at 50% -10%,rgba(255,255,255,.08),transparent 28%),
+        radial-gradient(circle at 18% 20%,rgba(199,156,255,.22),transparent 30%),
+        radial-gradient(circle at 80% 10%,rgba(120,216,255,.16),transparent 28%),
+        linear-gradient(180deg,#080c21 0%,#040714 58%,#02040d 100%);
+}
 
 .stars{
-    position:fixed;
-    width:100%;
-    height:100%;
-    z-index:-5;
+    z-index:-7;
 }
 
 .star{
@@ -39,147 +82,458 @@ body{
     height:2px;
     background:white;
     border-radius:50%;
-    opacity:.6;
-    animation:twinkle 4s infinite;
+    opacity:.65;
+    animation:twinkle 4s infinite ease-in-out;
 }
 
 @keyframes twinkle{
-    50%{
-        opacity:1;
+    50%{ opacity:1; transform:scale(1.8); }
+}
+
+.aurora{
+    z-index:-6;
+    overflow:hidden;
+}
+
+.aurora::before,
+.aurora::after{
+    content:'';
+    position:absolute;
+    width:80vw;
+    height:42vh;
+    filter:blur(50px);
+    opacity:.42;
+    transform:rotate(-12deg);
+    animation:drift 14s infinite alternate ease-in-out;
+}
+
+.aurora::before{
+    left:-18vw;
+    top:16vh;
+    background:linear-gradient(90deg,transparent,#7b2ff7,#ff8bd3,transparent);
+}
+
+.aurora::after{
+    right:-22vw;
+    top:36vh;
+    background:linear-gradient(90deg,transparent,#78d8ff,#9dffc2,transparent);
+    animation-delay:-5s;
+}
+
+@keyframes drift{
+    to{ transform:translateY(55px) rotate(8deg) scale(1.08); }
+}
+
+.constellation{
+    z-index:-5;
+    opacity:.28;
+    background-image:
+        linear-gradient(115deg,transparent 0 18%,rgba(255,255,255,.35) 18.2%,transparent 18.6% 100%),
+        linear-gradient(35deg,transparent 0 60%,rgba(255,255,255,.28) 60.2%,transparent 60.55% 100%);
+    background-size:360px 260px,430px 320px;
+}
+
+.particles{
+    z-index:20;
+}
+
+.spark{
+    position:fixed;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 20px var(--gold);
+    animation:sparkFly .8s ease-out forwards;
+}
+
+@keyframes sparkFly{
+    to{
+        opacity:0;
+        transform:translate(var(--x),var(--y)) scale(.2);
     }
 }
 
-.glow1,.glow2{
+.gate{
     position:fixed;
-    width:500px;
-    height:500px;
+    inset:0;
+    z-index:50;
+    display:grid;
+    place-items:center;
+    padding:24px;
+    background:
+        radial-gradient(circle at center,rgba(123,47,247,.24),transparent 34%),
+        rgba(4,7,20,.94);
+    transition:opacity .8s ease,visibility .8s ease;
+}
+
+.gate.hidden{
+    opacity:0;
+    visibility:hidden;
+}
+
+.gate-panel{
+    width:min(680px,100%);
+    text-align:center;
+    padding:36px;
+    border:1px solid var(--line);
+    border-radius:28px;
+    background:rgba(11,17,36,.72);
+    backdrop-filter:blur(22px);
+    box-shadow:0 0 90px rgba(123,47,247,.34);
+}
+
+.sigil{
+    width:190px;
+    height:190px;
+    margin:0 auto 24px;
     border-radius:50%;
-    filter:blur(120px);
-    z-index:-4;
+    position:relative;
+    display:grid;
+    place-items:center;
 }
 
-.glow1{
-    background:#7b2ff740;
-    top:-150px;
-    left:-100px;
-}
-
-.glow2{
-    background:#3d8bff30;
-    bottom:-150px;
-    right:-100px;
-}
-
-/* LOADING */
-
-.loading{
-    position:fixed;
-    width:100%;
-    height:100vh;
-    background:#050816;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    z-index:999;
-    transition:1s;
-}
-
-.magic-circle{
-    width:150px;
-    height:150px;
+.sigil::before,
+.sigil::after{
+    content:'';
+    position:absolute;
+    inset:0;
     border-radius:50%;
-    border:4px solid #ffffff10;
-    border-top:4px solid #c89fff;
-    animation:spin 2s linear infinite;
-    box-shadow:0 0 40px #7b2ff7;
+    border:2px solid rgba(255,255,255,.14);
+    box-shadow:0 0 32px rgba(199,156,255,.55), inset 0 0 32px rgba(120,216,255,.22);
+    animation:spin 9s linear infinite;
+}
+
+.sigil::after{
+    inset:26px;
+    border-color:rgba(255,217,138,.38);
+    animation-duration:5s;
+    animation-direction:reverse;
+}
+
+.sigil span{
+    font-size:76px;
+    filter:drop-shadow(0 0 28px rgba(255,217,138,.7));
 }
 
 @keyframes spin{
-    100%{
-        transform:rotate(360deg);
-    }
+    to{ transform:rotate(360deg); }
 }
 
-.loading p{
-    margin-top:25px;
-    opacity:.8;
-}
-
-/* MAIN */
-
-.container{
-    max-width:1500px;
-    margin:auto;
-    padding:50px 20px;
-}
-
-.hero{
-    text-align:center;
-}
-
-.logo{
-    font-size:85px;
-}
-
-h1{
-    font-size:70px;
-    background:linear-gradient(to right,#fff,#d6b1ff);
+.gate h1,
+.hero h1{
+    font-size:clamp(44px,7vw,82px);
+    line-height:1.02;
+    letter-spacing:0;
+    background:linear-gradient(90deg,#fff,var(--gold),var(--violet),#fff);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
+.gate p,
 .subtitle{
-    margin-top:15px;
-    opacity:.7;
+    margin-top:16px;
+    color:var(--muted);
     line-height:1.8;
 }
 
-/* GLASS */
-
-.glass{
-    margin-top:40px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.08);
-    backdrop-filter:blur(20px);
-    border-radius:35px;
-    padding:35px;
-    box-shadow:0 0 40px rgba(123,47,247,.15);
-}
-
-/* INPUT */
-
-input{
-    width:100%;
-    padding:18px;
-    border:none;
-    outline:none;
-    border-radius:18px;
-    background:#10192f;
+.primary-btn,
+.ghost-btn,
+.tool-btn,
+.share-btn{
+    min-height:46px;
+    border-radius:16px;
     color:white;
-    margin-top:15px;
-    border:1px solid transparent;
-    transition:.3s;
+    transition:.25s ease;
 }
 
-input:focus{
-    border:1px solid #c89fff;
-    box-shadow:0 0 20px rgba(123,47,247,.4);
+.primary-btn{
+    margin-top:28px;
+    padding:14px 26px;
+    font-weight:700;
+    background:linear-gradient(135deg,#7b2ff7,#ff8bd3);
+    box-shadow:0 16px 40px rgba(123,47,247,.36);
 }
 
-/* CARDS */
+.primary-btn:hover,
+.ghost-btn:hover,
+.tool-btn:hover,
+.share-btn:hover{
+    transform:translateY(-2px);
+}
+
+.primary-btn:disabled,
+.ghost-btn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.app{
+    width:min(1480px,100%);
+    margin:0 auto;
+    padding:42px 20px 70px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    gap:18px;
+    align-items:center;
+    margin-bottom:32px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:700;
+}
+
+.brand-mark{
+    width:44px;
+    height:44px;
+    display:grid;
+    place-items:center;
+    border-radius:14px;
+    background:rgba(255,255,255,.08);
+    border:1px solid var(--line);
+    box-shadow:0 0 28px rgba(199,156,255,.25);
+}
+
+.status{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.hero{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 360px;
+    gap:28px;
+    align-items:end;
+    min-height:360px;
+    padding:36px;
+    border:1px solid var(--line);
+    border-radius:32px;
+    background:
+        radial-gradient(circle at 85% 22%,rgba(255,217,138,.16),transparent 28%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025));
+    backdrop-filter:blur(18px);
+    overflow:hidden;
+    position:relative;
+}
+
+.hero::before{
+    content:'';
+    position:absolute;
+    width:360px;
+    height:360px;
+    right:80px;
+    top:-150px;
+    border:1px solid rgba(255,255,255,.11);
+    border-radius:50%;
+    box-shadow:inset 0 0 60px rgba(199,156,255,.14);
+}
+
+.hero-copy,
+.oracle-orb{
+    position:relative;
+    z-index:1;
+}
+
+.eyebrow{
+    color:var(--gold);
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.oracle-orb{
+    aspect-ratio:1;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:
+        radial-gradient(circle at 45% 35%,rgba(255,255,255,.8),rgba(255,217,138,.35) 10%,rgba(199,156,255,.32) 28%,rgba(120,216,255,.12) 52%,transparent 70%),
+        rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 0 80px rgba(199,156,255,.38);
+    animation:float 5s ease-in-out infinite;
+}
+
+.oracle-orb span{
+    font-size:110px;
+    filter:drop-shadow(0 0 34px rgba(255,217,138,.65));
+}
+
+@keyframes float{
+    50%{ transform:translateY(-12px); }
+}
+
+.control-grid{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.panel{
+    background:rgba(11,17,36,.78);
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:22px;
+    backdrop-filter:blur(18px);
+}
+
+.field{
+    display:grid;
+    gap:10px;
+}
+
+.field + .field{
+    margin-top:16px;
+}
+
+label{
+    color:rgba(255,255,255,.82);
+    font-weight:500;
+}
+
+input,
+textarea{
+    width:100%;
+    color:white;
+    background:#0d1530;
+    border:1px solid rgba(255,255,255,.1);
+    outline:none;
+    border-radius:16px;
+    padding:15px 16px;
+    transition:.2s ease;
+}
+
+textarea{
+    min-height:104px;
+    resize:vertical;
+}
+
+input:focus,
+textarea:focus{
+    border-color:var(--violet);
+    box-shadow:0 0 0 4px rgba(199,156,255,.12);
+}
+
+.modes{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+}
+
+.mode{
+    min-height:88px;
+    padding:12px 8px;
+    border-radius:18px;
+    background:#0d1530;
+    border:1px solid rgba(255,255,255,.08);
+    color:white;
+    display:grid;
+    place-items:center;
+    gap:4px;
+    transition:.25s ease;
+}
+
+.mode span{
+    font-size:25px;
+}
+
+.mode small{
+    color:var(--muted);
+}
+
+.mode.active{
+    background:linear-gradient(135deg,rgba(123,47,247,.48),rgba(255,139,211,.24));
+    border-color:rgba(255,217,138,.52);
+    box-shadow:0 0 32px rgba(199,156,255,.18);
+}
+
+.ritual-actions{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.ghost-btn,
+.tool-btn,
+.share-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    padding:11px 16px;
+    background:rgba(255,255,255,.08);
+    border:1px solid var(--line);
+}
+
+.ghost-btn.primary-action{
+    background:linear-gradient(135deg,#7b2ff7,#315dff);
+    box-shadow:0 14px 34px rgba(49,93,255,.22);
+}
+
+.reading-layout{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:minmax(0,1.45fr) minmax(320px,.55fr);
+    gap:22px;
+    align-items:start;
+}
+
+.section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:18px;
+}
+
+.section-head h2{
+    font-size:24px;
+}
+
+.hint{
+    color:var(--muted);
+    font-size:14px;
+}
 
 .cards{
-    margin-top:50px;
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:25px;
+    grid-template-columns:repeat(5,minmax(130px,1fr));
+    gap:18px;
+}
+
+.cards.shuffling .card{
+    animation:shuffle .7s ease-in-out;
+    animation-delay:calc(var(--i) * 35ms);
+}
+
+@keyframes shuffle{
+    25%{ transform:translateY(-18px) rotate(4deg); }
+    55%{ transform:translateX(16px) rotate(-4deg); }
+    85%{ transform:translateY(8px) rotate(3deg); }
 }
 
 .card{
-    height:300px;
-    perspective:1000px;
+    height:268px;
+    perspective:1200px;
     cursor:pointer;
+    transition:.25s ease;
+}
+
+.card.disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+.card.selected{
+    transform:translateY(-8px);
 }
 
 .card-inner{
@@ -187,580 +541,939 @@ input:focus{
     height:100%;
     position:relative;
     transform-style:preserve-3d;
-    transition:1s;
+    transition:transform .9s cubic-bezier(.2,.75,.2,1);
 }
 
 .card.flipped .card-inner{
     transform:rotateY(180deg);
 }
 
-.front,.back{
+.front,
+.back{
     position:absolute;
-    width:100%;
-    height:100%;
-    border-radius:25px;
+    inset:0;
+    border-radius:22px;
     backface-visibility:hidden;
+    overflow:hidden;
 }
 
 .front{
-    background:linear-gradient(135deg,#131d39,#7b2ff7);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:60px;
-    overflow:hidden;
-    box-shadow:0 0 40px rgba(123,47,247,.5);
+    background:
+        linear-gradient(135deg,rgba(255,255,255,.12),transparent 24%),
+        radial-gradient(circle at 50% 35%,rgba(255,217,138,.2),transparent 22%),
+        linear-gradient(160deg,#141d42,#4b2ad8 48%,#101936);
+    border:1px solid rgba(255,255,255,.14);
+    display:grid;
+    place-items:center;
+    box-shadow:0 18px 48px rgba(0,0,0,.32),0 0 34px rgba(123,47,247,.32);
 }
 
 .front::before{
     content:'';
     position:absolute;
-    width:250px;
-    height:250px;
-    background:rgba(255,255,255,.08);
-    transform:rotate(45deg);
+    inset:16px;
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:18px;
+}
+
+.front::after{
+    content:'';
+    position:absolute;
+    width:220px;
+    height:220px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+    transform:rotate(35deg);
     animation:shine 5s infinite;
 }
 
 @keyframes shine{
-    from{
-        left:-300px;
-    }
-    to{
-        left:300px;
-    }
+    from{ left:-260px; }
+    to{ left:260px; }
+}
+
+.card-sigil{
+    width:96px;
+    height:96px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    border:1px solid rgba(255,217,138,.45);
+    color:var(--gold);
+    font-size:46px;
+    box-shadow:0 0 36px rgba(255,217,138,.24);
 }
 
 .back{
-    background:#10192f;
     transform:rotateY(180deg);
-    padding:20px;
+    background:
+        radial-gradient(circle at 50% 18%,rgba(255,217,138,.22),transparent 28%),
+        linear-gradient(180deg,#172044,#091126);
+    border:1px solid rgba(255,255,255,.14);
+    padding:18px;
     display:flex;
     flex-direction:column;
-    justify-content:center;
-    align-items:center;
+    justify-content:space-between;
     text-align:center;
+}
+
+.card-art{
+    flex:1;
+    display:grid;
+    place-items:center;
+    border-radius:18px;
+    background:rgba(255,255,255,.045);
     border:1px solid rgba(255,255,255,.08);
+    font-size:64px;
+    box-shadow:inset 0 0 34px rgba(255,255,255,.04);
 }
 
-.back h2{
-    margin-top:10px;
+.back h3{
+    margin-top:14px;
+    font-size:18px;
 }
 
-.back p{
-    margin-top:12px;
-    opacity:.8;
-    line-height:1.7;
-    font-size:14px;
+.slot-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:18px;
 }
 
-.selected{
-    outline:4px solid #d6b1ff;
-    transform:scale(1.04);
+.slot{
+    min-height:104px;
+    border-radius:18px;
+    border:1px dashed rgba(255,255,255,.18);
+    background:rgba(255,255,255,.045);
+    display:grid;
+    place-items:center;
+    padding:12px;
+    text-align:center;
+    color:var(--muted);
 }
 
-/* RESULT */
+.slot.filled{
+    border-style:solid;
+    border-color:rgba(255,217,138,.42);
+    color:white;
+    background:rgba(255,217,138,.08);
+}
+
+.slot strong{
+    display:block;
+    color:var(--gold);
+    margin-bottom:5px;
+}
 
 .result{
     display:none;
-    margin-top:50px;
-    animation:fade 1s;
 }
 
-@keyframes fade{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+.result.show{
+    display:block;
+    animation:rise .65s ease both;
+}
+
+@keyframes rise{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
 }
 
 .result-box{
-    background:#10192f;
-    border-radius:30px;
-    padding:35px;
+    border-radius:24px;
+    padding:22px;
+    background:
+        radial-gradient(circle at 95% 10%,rgba(255,217,138,.12),transparent 26%),
+        #0d1530;
+    border:1px solid rgba(255,255,255,.12);
 }
 
-.result-box h2{
-    margin-bottom:20px;
+.result-meta{
+    color:var(--muted);
+    line-height:1.7;
+    margin:10px 0 18px;
 }
 
-.result-box p{
-    line-height:2;
-    opacity:.85;
+.result-text{
+    min-height:320px;
     white-space:pre-line;
+    color:rgba(255,255,255,.9);
+    line-height:2;
 }
 
-/* HISTORY */
+.share-row{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.daily-card{
+    display:grid;
+    grid-template-columns:92px 1fr;
+    gap:16px;
+    align-items:center;
+    margin-top:14px;
+    padding:16px;
+    border-radius:18px;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.daily-icon{
+    height:92px;
+    border-radius:18px;
+    display:grid;
+    place-items:center;
+    font-size:46px;
+    background:linear-gradient(135deg,rgba(255,217,138,.22),rgba(199,156,255,.18));
+}
+
+.daily-card p{
+    color:var(--muted);
+    line-height:1.7;
+    margin-top:6px;
+}
 
 .history{
-    margin-top:50px;
+    margin-top:22px;
+}
+
+.history-list{
+    display:grid;
+    gap:12px;
 }
 
 .history-item{
-    background:#0f1730;
-    padding:20px;
-    border-radius:20px;
-    margin-top:15px;
-    border:1px solid rgba(255,255,255,.05);
+    background:rgba(255,255,255,.055);
+    padding:16px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.08);
 }
 
 .date{
-    opacity:.5;
+    color:rgba(255,255,255,.46);
     font-size:13px;
-    margin-bottom:10px;
+    margin-bottom:8px;
 }
 
-/* MOBILE */
+.history-item h3{
+    font-size:16px;
+}
 
-@media(max-width:768px){
+.history-item p{
+    margin-top:8px;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:14px;
+    white-space:pre-line;
+}
 
-    h1{
-        font-size:45px;
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:24px;
+    transform:translateX(-50%) translateY(24px);
+    opacity:0;
+    z-index:60;
+    padding:12px 18px;
+    border-radius:999px;
+    background:rgba(13,21,48,.94);
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 16px 40px rgba(0,0,0,.28);
+    transition:.25s ease;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:1100px){
+    .hero,
+    .control-grid,
+    .reading-layout{
+        grid-template-columns:1fr;
+    }
+
+    .oracle-orb{
+        width:min(320px,100%);
+        justify-self:center;
+    }
+
+    .cards{
+        grid-template-columns:repeat(3,minmax(130px,1fr));
+    }
+}
+
+@media(max-width:720px){
+    .app{
+        padding:20px 12px 50px;
+    }
+
+    .topbar{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .hero,
+    .panel,
+    .gate-panel{
+        padding:20px;
+        border-radius:22px;
+    }
+
+    .modes,
+    .cards,
+    .slot-row{
+        grid-template-columns:1fr 1fr;
     }
 
     .card{
-        height:240px;
+        height:230px;
     }
 
-}
+    .slot-row .slot:last-child{
+        grid-column:1 / -1;
+    }
 
+    .daily-card{
+        grid-template-columns:1fr;
+    }
+}
 </style>
 </head>
-
 <body>
-
-<div class="loading" id="loading">
-
-    <div class="magic-circle"></div>
-
-    <p>
-        กำลังเชื่อมต่อกับเส้นทางโชคชะตา...
-    </p>
-
-</div>
-
+<div class="sky"></div>
 <div class="stars" id="stars"></div>
+<div class="aurora"></div>
+<div class="constellation"></div>
+<div class="particles" id="particles"></div>
 
-<div class="glow1"></div>
-<div class="glow2"></div>
-
-<div class="container">
-
-    <div class="hero">
-
-        <div class="logo">🔮</div>
-
+<section class="gate" id="gate">
+    <div class="gate-panel">
+        <div class="sigil"><span>🔮</span></div>
         <h1>Night Oracle</h1>
+        <p>ตั้งคำถามในใจ เลือกพลังงานที่อยากรู้ แล้วเปิดไพ่ 3 ใบให้จักรวาลตอบแบบ Past • Present • Future</p>
+        <button class="primary-btn" id="enterBtn">เริ่มเปิดคำทำนาย</button>
+    </div>
+</section>
 
-        <div class="subtitle">
-            เลือกไพ่ 3 ใบจาก 10 ใบ <br>
-            ไพ่จะวิเคราะห์แบบ Past • Present • Future จริง
+<main class="app">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">🔮</div>
+            <div>
+                <div>Night Oracle</div>
+                <div class="status" id="status">พร้อมเริ่มพิธีเปิดไพ่</div>
+            </div>
+        </div>
+        <button class="tool-btn" id="soundBtn" title="เปิดหรือปิดเสียงประกอบ">🔇 เสียงปิด</button>
+    </header>
+
+    <section class="hero">
+        <div class="hero-copy">
+            <div class="eyebrow">Oracle Tarot Experience</div>
+            <h1>ถามให้ชัด แล้วให้ไพ่พูดแทนดวงดาว</h1>
+            <p class="subtitle">เลือกหมวด เขียนคำถาม สับไพ่ แล้วเปิด 3 ใบเพื่ออ่านพลังงานของอดีต ปัจจุบัน และอนาคต พร้อมบันทึกประวัติให้อ่านย้อนหลัง</p>
+        </div>
+        <div class="oracle-orb"><span>✨</span></div>
+    </section>
+
+    <section class="control-grid">
+        <div class="panel">
+            <div class="section-head">
+                <h2>ตั้งคำถาม</h2>
+                <div class="hint">ยิ่งถามชัด ไพ่ยิ่งอ่านสนุก</div>
+            </div>
+            <div class="field">
+                <label for="name">ชื่อของคุณ</label>
+                <input type="text" id="name" placeholder="เช่น เติ้ช">
+            </div>
+            <div class="field">
+                <label for="question">คำถามที่อยากรู้</label>
+                <textarea id="question" placeholder="เช่น ความรักช่วงนี้จะไปทางไหน หรือ งานใหม่ที่คิดไว้เหมาะกับเราไหม"></textarea>
+            </div>
         </div>
 
-    </div>
+        <div class="panel">
+            <div class="section-head">
+                <h2>เลือกหมวด</h2>
+                <div class="hint">คำทำนายจะเปลี่ยนตามหมวด</div>
+            </div>
+            <div class="modes" id="modes"></div>
+            <div class="ritual-actions">
+                <button class="ghost-btn primary-action" id="shuffleBtn">🌀 สับไพ่</button>
+                <button class="ghost-btn" id="dailyBtn">🌙 ไพ่ประจำวัน</button>
+                <button class="ghost-btn" id="resetBtn">↺ เริ่มใหม่</button>
+            </div>
+        </div>
+    </section>
 
-    <div class="glass">
+    <section class="reading-layout">
+        <div class="panel">
+            <div class="section-head">
+                <h2>สำรับไพ่</h2>
+                <div class="hint" id="selectHint">เลือกไพ่ 3 ใบ</div>
+            </div>
+            <div class="slot-row" id="slots"></div>
+            <div class="cards" id="cards"></div>
+        </div>
 
-        <label>ชื่อของคุณ</label>
-
-        <input type="text" id="name" placeholder="เช่น เติ้ช">
-
-        <div class="cards" id="cards"></div>
-
-        <div class="result" id="result">
-
-            <div class="result-box">
-
-                <h2>
-                    ✨ คำทำนายจากไพ่
-                </h2>
-
-                <p id="finalText"></p>
-
+        <aside>
+            <div class="panel">
+                <div class="section-head">
+                    <h2>คำทำนาย</h2>
+                    <div class="hint">Past • Present • Future</div>
+                </div>
+                <div class="result" id="result">
+                    <div class="result-box">
+                        <h2>✨ สารจากไพ่</h2>
+                        <div class="result-meta" id="resultMeta"></div>
+                        <p class="result-text" id="finalText"></p>
+                        <div class="share-row">
+                            <button class="share-btn" id="copyBtn">📋 คัดลอกผล</button>
+                            <button class="share-btn" id="shareBtn">↗ แชร์ผล</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="emptyResult" class="hint">ผลคำทำนายจะปรากฏหลังเลือกครบ 3 ใบ</div>
             </div>
 
-        </div>
+            <div class="panel history">
+                <div class="section-head">
+                    <h2>ไพ่ประจำวัน</h2>
+                    <div class="hint" id="dailyDate"></div>
+                </div>
+                <div id="dailyCard"></div>
+            </div>
 
-        <div class="history">
+            <div class="panel history">
+                <div class="section-head">
+                    <h2>ประวัติ</h2>
+                    <div class="hint">ล่าสุด 8 ครั้ง</div>
+                </div>
+                <div class="history-list" id="history"></div>
+            </div>
+        </aside>
+    </section>
+</main>
 
-            <h2>
-                📜 ประวัติคำทำนาย
-            </h2>
-
-            <div id="history"></div>
-
-        </div>
-
-    </div>
-
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-
-/* LOADING */
-
-window.onload = ()=>{
-
-    setTimeout(()=>{
-        loading.style.opacity = "0"
-        loading.style.pointerEvents = "none"
-    },2000)
-
-    loadHistory()
-
-}
-
-/* STARS */
-
-for(let i=0;i<250;i++){
-
-    let s = document.createElement("div")
-
-    s.classList.add("star")
-
-    s.style.left = Math.random()*100+"%"
-    s.style.top = Math.random()*100+"%"
-
-    s.style.animationDuration =
-        (Math.random()*5+2)+"s"
-
-    stars.appendChild(s)
-
-}
-
-/* TAROT */
+const $ = (id)=>document.getElementById(id)
 
 const tarot = [
-
-{
-icon:"🌙",
-name:"The Moon",
-past:"อดีตเต็มไปด้วยความไม่ชัดเจน หรือความสัมพันธ์ที่ยังค้างคาใจ",
-present:"ตอนนี้คุณกำลังคิดมากและสับสนกับบางเรื่อง",
-future:"อนาคตจะเริ่มชัดขึ้นเมื่อคุณยอมรับความจริงบางอย่าง"
-},
-
-{
-icon:"☀️",
-name:"The Sun",
-past:"อดีตเคยมีช่วงเวลาที่สดใสและมีความสุข",
-present:"ตอนนี้ดวงกำลังเปิด มีโอกาสใหม่เข้ามา",
-future:"อนาคตมีแนวโน้มประสบความสำเร็จสูง"
-},
-
-{
-icon:"🗡️",
-name:"The Sword",
-past:"คุณเคยผ่านการตัดสินใจที่ยากลำบาก",
-present:"ตอนนี้มีเรื่องที่ต้องเลือกหรือเผชิญหน้า",
-future:"หากกล้าตัดสินใจ ชีวิตจะเปลี่ยนไปมาก"
-},
-
-{
-icon:"💜",
-name:"The Heart",
-past:"เรื่องความรักหรือความสัมพันธ์ส่งผลต่อชีวิตคุณมาก",
-present:"ตอนนี้มีคนกำลังคิดถึงหรือจับตามองคุณ",
-future:"อนาคตมีโอกาสเกิดความสัมพันธ์สำคัญ"
-},
-
-{
-icon:"🔥",
-name:"The Flame",
-past:"อดีตมีการเปลี่ยนแปลงครั้งใหญ่",
-present:"ตอนนี้พลังงานชีวิตแรงมาก",
-future:"อนาคตกำลังเข้าสู่ช่วงเปลี่ยนชีวิต"
-},
-
-{
-icon:"👁️",
-name:"The Eye",
-past:"คุณเคยมองข้ามสัญชาตญาณตัวเอง",
-present:"ตอนนี้เซนส์ของคุณแม่นมาก",
-future:"จะเริ่มเห็นความจริงของบางคน"
-},
-
-{
-icon:"🌊",
-name:"The Ocean",
-past:"คุณเคยจมอยู่กับอารมณ์ตัวเอง",
-present:"ตอนนี้ยังมีความลังเลในใจ",
-future:"อนาคตจะสงบขึ้นเมื่อปล่อยวาง"
-},
-
-{
-icon:"⚡",
-name:"The Thunder",
-past:"อดีตมีเหตุการณ์ไม่คาดคิดเกิดขึ้น",
-present:"ตอนนี้มีพลังแห่งการเปลี่ยนแปลง",
-future:"เร็วๆนี้จะมีเรื่องที่เปลี่ยนชีวิตคุณ"
-},
-
-{
-icon:"🌹",
-name:"The Rose",
-past:"คุณเคยได้รับความรักที่ลึกซึ้ง",
-present:"ตอนนี้เสน่ห์ของคุณโดดเด่นมาก",
-future:"อนาคตมีคนเข้ามาทำให้หัวใจเปลี่ยน"
-},
-
-{
-icon:"🕯️",
-name:"The Candle",
-past:"คุณเคยผ่านช่วงเวลามืดมน",
-present:"ตอนนี้เริ่มมองเห็นความหวัง",
-future:"อนาคตจะเริ่มดีขึ้นอย่างช้าๆ"
-}
-
+    {
+        icon:"🌙",
+        name:"The Moon",
+        tone:"ความลับและสัญชาตญาณ",
+        past:"อดีตเต็มไปด้วยความไม่ชัดเจน หรือความสัมพันธ์ที่ยังค้างคาใจ",
+        present:"ตอนนี้คุณกำลังคิดมากและสับสนกับบางเรื่อง",
+        future:"อนาคตจะเริ่มชัดขึ้นเมื่อคุณยอมรับความจริงบางอย่าง"
+    },
+    {
+        icon:"☀️",
+        name:"The Sun",
+        tone:"ความสำเร็จและการเปิดทาง",
+        past:"อดีตเคยมีช่วงเวลาที่สดใสและมีความสุข",
+        present:"ตอนนี้ดวงกำลังเปิด มีโอกาสใหม่เข้ามา",
+        future:"อนาคตมีแนวโน้มประสบความสำเร็จสูง"
+    },
+    {
+        icon:"🗡️",
+        name:"The Sword",
+        tone:"การตัดสินใจและความจริง",
+        past:"คุณเคยผ่านการตัดสินใจที่ยากลำบาก",
+        present:"ตอนนี้มีเรื่องที่ต้องเลือกหรือเผชิญหน้า",
+        future:"หากกล้าตัดสินใจ ชีวิตจะเปลี่ยนไปมาก"
+    },
+    {
+        icon:"💜",
+        name:"The Heart",
+        tone:"ความผูกพันและความรู้สึก",
+        past:"เรื่องความรักหรือความสัมพันธ์ส่งผลต่อชีวิตคุณมาก",
+        present:"ตอนนี้มีคนกำลังคิดถึงหรือจับตามองคุณ",
+        future:"อนาคตมีโอกาสเกิดความสัมพันธ์สำคัญ"
+    },
+    {
+        icon:"🔥",
+        name:"The Flame",
+        tone:"แรงผลักดันและการเปลี่ยนผ่าน",
+        past:"อดีตมีการเปลี่ยนแปลงครั้งใหญ่",
+        present:"ตอนนี้พลังงานชีวิตแรงมาก",
+        future:"อนาคตกำลังเข้าสู่ช่วงเปลี่ยนชีวิต"
+    },
+    {
+        icon:"👁️",
+        name:"The Eye",
+        tone:"การมองเห็นและความจริง",
+        past:"คุณเคยมองข้ามสัญชาตญาณตัวเอง",
+        present:"ตอนนี้เซนส์ของคุณแม่นมาก",
+        future:"จะเริ่มเห็นความจริงของบางคน"
+    },
+    {
+        icon:"🌊",
+        name:"The Ocean",
+        tone:"อารมณ์และการปล่อยวาง",
+        past:"คุณเคยจมอยู่กับอารมณ์ตัวเอง",
+        present:"ตอนนี้ยังมีความลังเลในใจ",
+        future:"อนาคตจะสงบขึ้นเมื่อปล่อยวาง"
+    },
+    {
+        icon:"⚡",
+        name:"The Thunder",
+        tone:"เหตุการณ์ฉับพลัน",
+        past:"อดีตมีเหตุการณ์ไม่คาดคิดเกิดขึ้น",
+        present:"ตอนนี้มีพลังแห่งการเปลี่ยนแปลง",
+        future:"เร็วๆนี้จะมีเรื่องที่เปลี่ยนชีวิตคุณ"
+    },
+    {
+        icon:"🌹",
+        name:"The Rose",
+        tone:"เสน่ห์และการเยียวยาหัวใจ",
+        past:"คุณเคยได้รับความรักที่ลึกซึ้ง",
+        present:"ตอนนี้เสน่ห์ของคุณโดดเด่นมาก",
+        future:"อนาคตมีคนเข้ามาทำให้หัวใจเปลี่ยน"
+    },
+    {
+        icon:"🕯️",
+        name:"The Candle",
+        tone:"ความหวังและทางออก",
+        past:"คุณเคยผ่านช่วงเวลามืดมน",
+        present:"ตอนนี้เริ่มมองเห็นความหวัง",
+        future:"อนาคตจะเริ่มดีขึ้นอย่างช้าๆ"
+    }
 ]
 
-/* CREATE CARDS */
-
-const cardsBox =
-    document.getElementById("cards")
+const modes = [
+    { id:"love", icon:"💞", label:"ความรัก", energy:"หัวใจ", advice:"ให้ฟังความรู้สึกจริงของตัวเอง และอย่าเร่งคำตอบจากอีกฝ่ายจนเกินไป" },
+    { id:"work", icon:"💼", label:"งาน", energy:"เป้าหมาย", advice:"งานเด่นเมื่อคุณกล้าจัดลำดับความสำคัญ และเลือกสนามที่ใช้ความสามารถจริง" },
+    { id:"money", icon:"💰", label:"เงิน", energy:"ความมั่นคง", advice:"ช่วงนี้ควรแยกความอยากออกจากความจำเป็น โอกาสเงินมาพร้อมวินัย" },
+    { id:"future", icon:"🌠", label:"อนาคต", energy:"เส้นทาง", advice:"อนาคตไม่ได้ล็อกตาย ไพ่แนะนำให้ขยับทีละก้าวแต่ชัดเจน" },
+    { id:"warning", icon:"🧿", label:"คำเตือน", energy:"การป้องกัน", advice:"อย่าเพิ่งเชื่อทุกอย่างที่เห็น ให้ดูการกระทำซ้ำๆ มากกว่าคำพูดสวยๆ" }
+]
 
 const selected = []
+let deck = tarot.map((_,index)=>index)
+let activeMode = modes[0]
+let latestText = ""
+let audioCtx = null
+let soundOn = false
+let typingTimer = null
 
-tarot.forEach((card,index)=>{
+function init(){
+    createStars()
+    renderModes()
+    renderSlots()
+    renderCards()
+    loadHistory()
+    loadDaily()
 
-cardsBox.innerHTML += `
+    $("enterBtn").addEventListener("click",enterOracle)
+    $("shuffleBtn").addEventListener("click",shuffleDeck)
+    $("resetBtn").addEventListener("click",resetReading)
+    $("dailyBtn").addEventListener("click",drawDaily)
+    $("soundBtn").addEventListener("click",toggleSound)
+    $("copyBtn").addEventListener("click",copyReading)
+    $("shareBtn").addEventListener("click",shareReading)
+}
 
-<div class="card" onclick="selectCard(this,${index})">
-
-    <div class="card-inner">
-
-        <div class="front">
-            ✨
-        </div>
-
-        <div class="back">
-
-            <div style="font-size:55px;">
-                ${card.icon}
-            </div>
-
-            <h2>${card.name}</h2>
-
-        </div>
-
-    </div>
-
-</div>
-
-`
-
-})
-
-/* SELECT */
-
-function selectCard(el,index){
-
-    if(selected.length >= 3 &&
-       !el.classList.contains("selected")){
-        return
+function createStars(){
+    const stars = $("stars")
+    for(let i=0;i<320;i++){
+        const s = document.createElement("div")
+        s.className = "star"
+        s.style.left = Math.random()*100 + "%"
+        s.style.top = Math.random()*100 + "%"
+        s.style.animationDuration = (Math.random()*5+2) + "s"
+        s.style.animationDelay = (Math.random()*5) + "s"
+        stars.appendChild(s)
     }
+}
 
-    el.classList.toggle("flipped")
-    el.classList.toggle("selected")
+function enterOracle(){
+    $("gate").classList.add("hidden")
+    playTone(320,.08,"sine")
+    playTone(640,.14,"triangle",.08)
+    burst(innerWidth/2,innerHeight/2,38)
+    $("name").focus()
+}
 
-    const exists =
-        selected.includes(index)
+function renderModes(){
+    $("modes").innerHTML = modes.map((mode,index)=>`
+        <button class="mode ${index === 0 ? "active" : ""}" data-mode="${mode.id}">
+            <span>${mode.icon}</span>
+            <strong>${mode.label}</strong>
+            <small>${mode.energy}</small>
+        </button>
+    `).join("")
+
+    document.querySelectorAll(".mode").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+            activeMode = modes.find(mode=>mode.id === btn.dataset.mode)
+            document.querySelectorAll(".mode").forEach(item=>item.classList.remove("active"))
+            btn.classList.add("active")
+            $("status").textContent = `โหมด ${activeMode.label} พร้อมเปิดคำทำนาย`
+            playTone(520,.06,"triangle")
+        })
+    })
+}
+
+function renderSlots(){
+    const labels = ["อดีต","ปัจจุบัน","อนาคต"]
+    $("slots").innerHTML = labels.map((label,index)=>{
+        const card = selected[index] !== undefined ? tarot[selected[index]] : null
+        return `
+            <div class="slot ${card ? "filled" : ""}">
+                <div>
+                    <strong>${label}</strong>
+                    ${card ? `${card.icon}<br>${card.name}` : `รอไพ่ใบที่ ${index + 1}`}
+                </div>
+            </div>
+        `
+    }).join("")
+    $("selectHint").textContent = selected.length < 3 ? `เลือกอีก ${3 - selected.length} ใบ` : "เปิดครบ 3 ใบแล้ว"
+}
+
+function renderCards(){
+    $("cards").innerHTML = deck.map((cardIndex,position)=>{
+        const card = tarot[cardIndex]
+        const isSelected = selected.includes(cardIndex)
+        const disabled = selected.length >= 3 && !isSelected
+        return `
+            <div class="card ${isSelected ? "flipped selected" : ""} ${disabled ? "disabled" : ""}" style="--i:${position}" data-index="${cardIndex}">
+                <div class="card-inner">
+                    <div class="front">
+                        <div class="card-sigil">✦</div>
+                    </div>
+                    <div class="back">
+                        <div class="card-art">${card.icon}</div>
+                        <div>
+                            <h3>${card.name}</h3>
+                            <div class="hint">${card.tone}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    }).join("")
+
+    document.querySelectorAll(".card").forEach(card=>{
+        card.addEventListener("click",()=>selectCard(card))
+    })
+}
+
+function selectCard(el){
+    const index = Number(el.dataset.index)
+    const exists = selected.includes(index)
+    if(selected.length >= 3 && !exists) return
 
     if(exists){
-
-        selected.splice(
-            selected.indexOf(index),1
-        )
-
+        selected.splice(selected.indexOf(index),1)
     }else{
-
         selected.push(index)
-
+        const rect = el.getBoundingClientRect()
+        burst(rect.left + rect.width/2,rect.top + rect.height/2,24)
+        playTone(720,.08,"triangle")
+        playTone(360,.1,"sine",.05)
     }
+
+    renderSlots()
+    renderCards()
 
     if(selected.length === 3){
-
-        generateReading()
-
+        setTimeout(generateReading,450)
     }else{
-
-        result.style.display = "none"
-
+        hideResult()
     }
-
 }
 
-/* GENERATE */
+function shuffleDeck(){
+    selected.splice(0,selected.length)
+    hideResult()
+    deck = deck
+        .map(value=>({ value, sort:Math.random() }))
+        .sort((a,b)=>a.sort-b.sort)
+        .map(item=>item.value)
+    renderSlots()
+    renderCards()
+    $("cards").classList.add("shuffling")
+    $("status").textContent = "กำลังสับไพ่และกวนพลังงาน"
+    playTone(180,.08,"sawtooth")
+    playTone(260,.08,"sawtooth",.08)
+    playTone(360,.08,"triangle",.16)
+    setTimeout(()=>$("cards").classList.remove("shuffling"),900)
+}
+
+function resetReading(){
+    selected.splice(0,selected.length)
+    latestText = ""
+    hideResult()
+    renderSlots()
+    renderCards()
+    $("status").textContent = "พร้อมเริ่มพิธีเปิดไพ่"
+    playTone(240,.08,"sine")
+}
+
+function hideResult(){
+    clearTimeout(typingTimer)
+    $("result").classList.remove("show")
+    $("emptyResult").style.display = "block"
+    $("finalText").textContent = ""
+}
 
 function generateReading(){
+    const name = $("name").value.trim()
+    const question = $("question").value.trim()
 
-    const name =
-        document.getElementById("name").value
-
-    if(name === ""){
-        alert("กรุณากรอกชื่อ")
+    if(!name){
+        showToast("กรุณากรอกชื่อก่อนเปิดคำทำนาย")
+        $("name").focus()
+        selected.pop()
+        renderSlots()
+        renderCards()
         return
     }
 
-    const past =
-        tarot[selected[0]]
+    const past = tarot[selected[0]]
+    const present = tarot[selected[1]]
+    const future = tarot[selected[2]]
+    const combo = getCombo(past,present,future)
+    const questionLine = question ? `คำถาม: ${question}` : "คำถาม: อ่านพลังงานภาพรวม"
 
-    const present =
-        tarot[selected[1]]
+    latestText = `🔮 Night Oracle สำหรับ ${name}
+หมวด: ${activeMode.label}
+${questionLine}
 
-    const future =
-        tarot[selected[2]]
-
-    let combination = ""
-
-    /* COMBO ANALYSIS */
-
-    if(
-        past.name === "The Moon" &&
-        future.name === "The Sun"
-    ){
-
-        combination =
-        "ไพ่ชุดนี้หมายถึงการเดินออกจากช่วงเวลาที่สับสน ไปสู่ช่วงชีวิตที่ชัดเจนและสดใสกว่าเดิม"
-
-    }
-
-    else if(
-        present.name === "The Thunder" &&
-        future.name === "The Flame"
-    ){
-
-        combination =
-        "มีแนวโน้มเกิดการเปลี่ยนแปลงครั้งใหญ่แบบรวดเร็ว อาจเป็นเรื่องงาน ความสัมพันธ์ หรือเป้าหมายชีวิต"
-
-    }
-
-    else if(
-        past.name === "The Heart" &&
-        future.name === "The Rose"
-    ){
-
-        combination =
-        "ไพ่ชุดนี้เด่นเรื่องความรักมาก คนเก่าหรือความสัมพันธ์เก่าอาจกลับเข้ามาอีกครั้ง"
-
-    }
-
-    else if(
-        present.name === "The Ocean" &&
-        future.name === "The Candle"
-    ){
-
-        combination =
-        "แม้ตอนนี้จะยังสับสน แต่สุดท้ายคุณจะค่อยๆเจอทางออกและเริ่มกลับมาสบายใจ"
-
-    }
-
-    else{
-
-        combination =
-        "ไพ่ทั้งสามใบสะท้อนว่าชีวิตของคุณกำลังเข้าสู่ช่วงเปลี่ยนผ่านสำคัญ มีทั้งบททดสอบและโอกาสใหม่รออยู่"
-
-    }
-
-    const text = `
-
-🔮 ไพ่ใบแรก : ${past.name}
+ไพ่ใบแรก Past: ${past.name}
 ${past.past}
 
-✨ ไพ่ใบที่สอง : ${present.name}
+ไพ่ใบที่สอง Present: ${present.name}
 ${present.present}
 
-🌠 ไพ่ใบที่สาม : ${future.name}
+ไพ่ใบที่สาม Future: ${future.name}
 ${future.future}
 
-📜 บทสรุปจากไพ่
-${combination}
+บทสรุปจากไพ่
+${combo}
 
-`
+คำแนะนำเฉพาะหมวด ${activeMode.label}
+${activeMode.advice}
 
-    document.getElementById("finalText")
-        .innerHTML = text
+สารปิดท้าย
+${makeClosing(past,present,future)}`
 
-    result.style.display = "block"
-
-    /* SAVE */
-
-    const history =
-        JSON.parse(localStorage.getItem("nightOracleHistory")) || []
-
-    history.unshift({
-
-        date:new Date().toLocaleString("th-TH"),
-
-        text:text,
-
-        cards:
-            `${past.name}, ${present.name}, ${future.name}`
-
-    })
-
-    localStorage.setItem(
-        "nightOracleHistory",
-        JSON.stringify(history)
-    )
-
+    $("resultMeta").textContent = `${name} • ${activeMode.label} • ${new Date().toLocaleString("th-TH")}`
+    $("result").classList.add("show")
+    $("emptyResult").style.display = "none"
+    typeText(latestText)
+    saveHistory({ name, question, text:latestText, cards:`${past.name}, ${present.name}, ${future.name}`, mode:activeMode.label })
     loadHistory()
-
+    $("status").textContent = "คำทำนายเปิดครบแล้ว"
+    playTone(480,.1,"triangle")
+    playTone(720,.14,"sine",.08)
 }
 
-/* HISTORY */
+function getCombo(past,present,future){
+    if(past.name === "The Moon" && future.name === "The Sun"){
+        return "ไพ่ชุดนี้หมายถึงการเดินออกจากช่วงเวลาที่สับสน ไปสู่ช่วงชีวิตที่ชัดเจนและสดใสกว่าเดิม"
+    }
+    if(present.name === "The Thunder" && future.name === "The Flame"){
+        return "มีแนวโน้มเกิดการเปลี่ยนแปลงครั้งใหญ่แบบรวดเร็ว อาจเป็นเรื่องงาน ความสัมพันธ์ หรือเป้าหมายชีวิต"
+    }
+    if(past.name === "The Heart" && future.name === "The Rose"){
+        return "ไพ่ชุดนี้เด่นเรื่องความรักมาก คนเก่าหรือความสัมพันธ์เก่าอาจกลับเข้ามาอีกครั้ง"
+    }
+    if(present.name === "The Ocean" && future.name === "The Candle"){
+        return "แม้ตอนนี้จะยังสับสน แต่สุดท้ายคุณจะค่อยๆ เจอทางออกและเริ่มกลับมาสบายใจ"
+    }
+    if(future.name === "The Eye"){
+        return "ปลายทางของเรื่องนี้คือการรู้ความจริง ไพ่บอกให้สังเกตสัญญาณเล็กๆ เพราะคำตอบซ่อนอยู่ตรงนั้น"
+    }
+    return "ไพ่ทั้งสามใบสะท้อนว่าชีวิตของคุณกำลังเข้าสู่ช่วงเปลี่ยนผ่านสำคัญ มีทั้งบททดสอบและโอกาสใหม่รออยู่"
+}
+
+function makeClosing(past,present,future){
+    const lines = [
+        `พลังหลักคือ ${present.tone} แต่รากของเรื่องมาจาก ${past.tone}`,
+        `สิ่งที่ควรทำคือขยับอย่างมีสติ เพราะปลายทางกำลังพาไปสู่ ${future.tone}`,
+        "คำตอบที่ดีที่สุดจะเกิดเมื่อคุณไม่ฝืนจังหวะ และไม่ลดคุณค่าของตัวเองเพื่อให้เรื่องใดเรื่องหนึ่งสำเร็จเร็วขึ้น"
+    ]
+    return lines.join("\n")
+}
+
+function typeText(text){
+    clearTimeout(typingTimer)
+    const box = $("finalText")
+    box.textContent = ""
+    let i = 0
+
+    function step(){
+        box.textContent = text.slice(0,i)
+        i += 2
+        if(i <= text.length){
+            typingTimer = setTimeout(step,12)
+        }
+    }
+    step()
+}
+
+function saveHistory(item){
+    const history = JSON.parse(localStorage.getItem("nightOracleHistory")) || []
+    history.unshift({
+        date:new Date().toLocaleString("th-TH"),
+        ...item
+    })
+    localStorage.setItem("nightOracleHistory",JSON.stringify(history.slice(0,20)))
+}
 
 function loadHistory(){
-
-    const history =
-        JSON.parse(localStorage.getItem("nightOracleHistory")) || []
-
-    const historyBox =
-        document.getElementById("history")
-
-    historyBox.innerHTML = ""
+    const history = JSON.parse(localStorage.getItem("nightOracleHistory")) || []
+    const historyBox = $("history")
 
     if(history.length === 0){
-
-        historyBox.innerHTML =
-        `<div style="opacity:.5;margin-top:15px;">
-            ยังไม่มีประวัติ
-        </div>`
-
+        historyBox.innerHTML = `<div class="hint">ยังไม่มีประวัติคำทำนาย</div>`
         return
     }
 
-    history.slice(0,10).forEach(item=>{
-
-        historyBox.innerHTML += `
-
+    historyBox.innerHTML = history.slice(0,8).map(item=>`
         <div class="history-item">
-
-            <div class="date">
-                ${item.date}
-            </div>
-
-            <h3>
-                🔮 ${item.cards}
-            </h3>
-
-            <p style="margin-top:10px;line-height:1.8;opacity:.8;">
-                ${item.text}
-            </p>
-
+            <div class="date">${item.date} • ${item.mode || "ภาพรวม"}</div>
+            <h3>🔮 ${item.cards}</h3>
+            <p>${shorten(item.text,260)}</p>
         </div>
-
-        `
-
-    })
-
+    `).join("")
 }
 
-</script>
+function drawDaily(){
+    const today = new Date().toLocaleDateString("th-TH")
+    const card = tarot[Math.floor(Math.random()*tarot.length)]
+    const daily = {
+        date:today,
+        card,
+        text:`วันนี้ ${card.name} บอกให้คุณโฟกัสเรื่อง${card.tone} ${card.present}`
+    }
+    localStorage.setItem("nightOracleDaily",JSON.stringify(daily))
+    renderDaily(daily)
+    burst(innerWidth - 130,220,30)
+    playTone(610,.08,"triangle")
+    showToast("เปิดไพ่ประจำวันแล้ว")
+}
 
+function loadDaily(){
+    const daily = JSON.parse(localStorage.getItem("nightOracleDaily"))
+    if(daily){
+        renderDaily(daily)
+        return
+    }
+    $("dailyCard").innerHTML = `<div class="hint">กด “ไพ่ประจำวัน” เพื่อสุ่มพลังงานวันนี้</div>`
+    $("dailyDate").textContent = ""
+}
+
+function renderDaily(daily){
+    $("dailyDate").textContent = daily.date
+    $("dailyCard").innerHTML = `
+        <div class="daily-card">
+            <div class="daily-icon">${daily.card.icon}</div>
+            <div>
+                <h3>${daily.card.name}</h3>
+                <p>${daily.text}</p>
+            </div>
+        </div>
+    `
+}
+
+async function copyReading(){
+    if(!latestText){
+        showToast("ยังไม่มีผลให้คัดลอก")
+        return
+    }
+    try{
+        await navigator.clipboard.writeText(latestText)
+        showToast("คัดลอกผลคำทำนายแล้ว")
+    }catch(error){
+        showToast("คัดลอกไม่ได้ในเบราว์เซอร์นี้")
+    }
+}
+
+async function shareReading(){
+    if(!latestText){
+        showToast("ยังไม่มีผลให้แชร์")
+        return
+    }
+    if(navigator.share){
+        try{
+            await navigator.share({ title:"Night Oracle", text:latestText })
+            showToast("เปิดหน้าต่างแชร์แล้ว")
+        }catch(error){
+            showToast("ยกเลิกการแชร์")
+        }
+    }else{
+        copyReading()
+    }
+}
+
+function toggleSound(){
+    soundOn = !soundOn
+    $("soundBtn").textContent = soundOn ? "🔊 เสียงเปิด" : "🔇 เสียงปิด"
+    if(soundOn){
+        ensureAudio()
+        playTone(440,.08,"sine")
+        playTone(660,.08,"triangle",.08)
+    }
+}
+
+function ensureAudio(){
+    if(!audioCtx){
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+    }
+}
+
+function playTone(freq,duration,type="sine",delay=0){
+    if(!soundOn && audioCtx === null) return
+    if(!soundOn) return
+    ensureAudio()
+    const osc = audioCtx.createOscillator()
+    const gain = audioCtx.createGain()
+    const start = audioCtx.currentTime + delay
+    osc.type = type
+    osc.frequency.value = freq
+    gain.gain.setValueAtTime(0,start)
+    gain.gain.linearRampToValueAtTime(.05,start+.02)
+    gain.gain.exponentialRampToValueAtTime(.001,start+duration)
+    osc.connect(gain)
+    gain.connect(audioCtx.destination)
+    osc.start(start)
+    osc.stop(start+duration+.02)
+}
+
+function burst(x,y,count){
+    for(let i=0;i<count;i++){
+        const spark = document.createElement("div")
+        spark.className = "spark"
+        spark.style.left = x + "px"
+        spark.style.top = y + "px"
+        spark.style.setProperty("--x",(Math.random()*190-95)+"px")
+        spark.style.setProperty("--y",(Math.random()*190-95)+"px")
+        spark.style.background = i % 3 === 0 ? "var(--pink)" : i % 3 === 1 ? "var(--blue)" : "var(--gold)"
+        $("particles").appendChild(spark)
+        setTimeout(()=>spark.remove(),850)
+    }
+}
+
+function showToast(message){
+    $("toast").textContent = message
+    $("toast").classList.add("show")
+    setTimeout(()=>$("toast").classList.remove("show"),2200)
+}
+
+function shorten(text,length){
+    if(!text) return ""
+    return text.length > length ? text.slice(0,length) + "..." : text
+}
+
+init()
+</script>
 </body>
 </html>
